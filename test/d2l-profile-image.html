@@ -12,6 +12,7 @@
 
 	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 	<script src="../../web-component-tester/browser.js"></script>
+	<link rel="import" href="../d2l-polymer-siren-behaviors/store/entity-store.html">
 	<link rel="import" href="../components/d2l-profile-image.html">
 </head>
 
@@ -44,20 +45,27 @@
 				});
 			});
 
-			test('When user information not yet fetch, base component marked as loading', function() {
+			test('When user information not yet fetch (entity is null), base component marked as loading', function() {
 				var profileImage = Polymer.dom(defaultElement.root).querySelector('#d2l-profile-image');
 				assert.equal(profileImage.hasAttribute('loading'), true);
 			});
 
-			test('When user information fetched, base component not marked as loading', function(done) {
-				var href = 'someLink';
-				defaultElement._fetchEntity = sinon.stub();
-				defaultElement._fetchEntity
-					.withArgs(sinon.match(href))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse({})));
-				defaultElement.href = href;
+			test('When failing to retrieve user information, base component not marked as loading', function(done) {
+				var eventNameUnderTest = 'd2l-siren-entity-error';
 
-				defaultElement._fetchUserInformation()
+				defaultElement.addEventListener(eventNameUnderTest, function() {
+					flush(function() {
+						var profileImage = Polymer.dom(defaultElement.root).querySelector('#d2l-profile-image');
+						assert.equal(profileImage.hasAttribute('loading'), false);
+						done();
+					});
+				});
+
+				defaultElement.dispatchEvent(new Event(eventNameUnderTest));
+			});
+
+			test('When user information fetched, base component not marked as loading', function(done) {
+				defaultElement._configureProfileImage(true)
 					.then(function() {
 						flush(function() {
 							var profileImage = Polymer.dom(defaultElement.root).querySelector('#d2l-profile-image');
@@ -105,14 +113,9 @@
 							{ 'rel': ['self'], 'href': href }
 						]
 					};
-					defaultElement._fetchEntity = sinon.stub();
-					defaultElement._fetchEntity
-						.withArgs(sinon.match(href))
-						.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(response)));
+					var entity = window.D2L.Hypermedia.Siren.Parse(response);
 
-					defaultElement.href = href;
-
-					defaultElement._fetchUserInformation()
+					defaultElement._configureProfileImage(entity)
 						.then(function() {
 							flush(function() {
 								assert.equal(defaultElement._firstName, t.anonFirst ? '' : firstName);
@@ -175,14 +178,9 @@
 							{ 'rel': ['self'], 'href': href }
 						]
 					};
-					defaultElement._fetchEntity = sinon.stub();
-					defaultElement._fetchEntity
-						.withArgs(sinon.match(href))
-						.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(response)));
+					var entity = window.D2L.Hypermedia.Siren.Parse(response);
 
-					defaultElement.href = href;
-
-					defaultElement._fetchUserInformation()
+					defaultElement._configureProfileImage(entity)
 						.then(function() {
 							flush(function() {
 								assert.equal(defaultElement._imageUrl, isDefaultImage ? '' : expectedImage);

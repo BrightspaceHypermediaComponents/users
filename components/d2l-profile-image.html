@@ -1,5 +1,6 @@
 <link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../../d2l-fetch-siren-entity-behavior/d2l-fetch-siren-entity-behavior.html">
+<link rel="import" href="../../d2l-polymer-siren-behaviors/store/entity-behavior.html">
+<link rel="import" href="../../d2l-polymer-siren-behaviors/store/siren-action-behavior.html">
 
 <link rel="import" href="./d2l-profile-image-base.html">
 
@@ -34,8 +35,7 @@ D2L Profile Image Hypermedia
 			is: 'd2l-profile-image',
 			properties: {
 				href: {
-					type: String,
-					observer: '_configureProfileImage'
+					type: String
 				},
 				small: {
 					type: Boolean
@@ -71,59 +71,70 @@ D2L Profile Image Hypermedia
 				}
 			},
 			behaviors: [
-				D2L.PolymerBehaviors.FetchSirenEntityBehavior
+				D2L.PolymerBehaviors.Siren.EntityBehavior
 			],
-			_configureProfileImage: function() {
-				this._fetchUserInformation()
+			observers: [
+				'_configureProfileImage(entity)',
+			],
+			ready: function() {
+				this.addEventListener('d2l-siren-entity-error', function() {
+					this._configureProfileImage(null)
 					.then(function() {
 						this.set('_loading', false);
 					}.bind(this));
+				});
 			},
-			_fetchUserInformation: function() {
-				return this._fetchEntity(this.href)
-					.then(function(data) {
+			_configureProfileImage: function(entity) {
+				if (!entity) {
+					return Promise.resolve();
+				}
 
-						this.set('_imageUrl', '');
-						if (data.hasSubEntityByRel('https://api.brightspace.com/rels/user-profile')) {
+				return Promise.resolve(entity).then(function(data) {
 
-							var userProfile = data.getSubEntityByRel('https://api.brightspace.com/rels/user-profile');
-							if (userProfile) {
+					this.set('_imageUrl', '');
+					if (data.hasSubEntityByRel('https://api.brightspace.com/rels/user-profile')) {
 
-								var profileImage = userProfile.getSubEntityByRel('https://api.brightspace.com/rels/profile-image');
-								if (profileImage && !profileImage.hasClass('default-image')) {
+						var userProfile = data.getSubEntityByRel('https://api.brightspace.com/rels/user-profile');
+						if (userProfile) {
 
-									var imageEntity = profileImage.getLinkByRel('https://api.brightspace.com/rels/thumbnail#regular');
-									this.set('_imageUrl', imageEntity.href);
-								}
+							var profileImage = userProfile.getSubEntityByRel('https://api.brightspace.com/rels/profile-image');
+							if (profileImage && !profileImage.hasClass('default-image')) {
+
+								var imageEntity = profileImage.getLinkByRel('https://api.brightspace.com/rels/thumbnail#regular');
+								this.set('_imageUrl', imageEntity.href);
 							}
 						}
+					}
 
-						this.set('_firstName', '');
-						var firstName = data.getSubEntityByRel('https://api.brightspace.com/rels/first-name');
-						if (!firstName.hasClass('default-name')) {
-							this.set('_firstName', firstName.properties.name);
-						}
+					this.set('_firstName', '');
+					var firstName = data.getSubEntityByRel('https://api.brightspace.com/rels/first-name');
+					if (!firstName.hasClass('default-name')) {
+						this.set('_firstName', firstName.properties.name);
+					}
 
-						this.set('_lastName', '');
-						var lastName = data.getSubEntityByRel('https://api.brightspace.com/rels/last-name');
-						if (!lastName.hasClass('default-name')) {
-							this.set('_lastName', lastName.properties.name);
-						}
+					this.set('_lastName', '');
+					var lastName = data.getSubEntityByRel('https://api.brightspace.com/rels/last-name');
+					if (!lastName.hasClass('default-name')) {
+						this.set('_lastName', lastName.properties.name);
+					}
 
-						this.set('_colourId', -1);
-						var selfLink = data.getLinkByRel('self').href;
-						var userId = selfLink.split('/').pop();
-						if (!isNaN(userId)) {
-							this.set('_colourId', userId);
-						}
+					this.set('_colourId', -1);
+					var selfLink = data.getLinkByRel('self').href;
+					var userId = selfLink.split('/').pop();
+					if (!isNaN(userId)) {
+						this.set('_colourId', userId);
+					}
 
-					}.bind(this))
-					.catch(function() {
-						this.set('_imageUrl', '');
-						this.set('_firstName', '');
-						this.set('_lastName', '');
-						this.set('_colourId', -1);
-					}.bind(this));
+				}.bind(this))
+				.catch(function() {
+					this.set('_imageUrl', '');
+					this.set('_firstName', '');
+					this.set('_lastName', '');
+					this.set('_colourId', -1);
+				}.bind(this))
+				.then(function() {
+					this.set('_loading', false);
+				}.bind(this));
 			}
 		});
 	</script>
