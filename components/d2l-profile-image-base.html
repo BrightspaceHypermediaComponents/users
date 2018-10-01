@@ -19,6 +19,9 @@ D2L Profile Image
 					width: 100%;
 					height: 100%;
 				}
+				d2l-icon {
+					overflow: visible;
+				}
 				.initials {
 					background-color: var(--initials-background-color);
 					color: var(--d2l-color-regolith);
@@ -42,7 +45,7 @@ D2L Profile Image
 		</custom-style>
 		<template is="dom-if" if="[[_showShadyPerson(_displayType)]]">
 			<div class="shady-person">
-				<d2l-icon icon="d2l-tier3:profile-pic", style="overflow:visible"></d2l-icon>
+				<d2l-icon icon="d2l-tier3:profile-pic"></d2l-icon>
 			</div>
 		</template>
 

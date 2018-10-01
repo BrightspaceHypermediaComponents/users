@@ -34,9 +34,6 @@ D2L Profile Image Hypermedia
 		Polymer({
 			is: 'd2l-profile-image',
 			properties: {
-				href: {
-					type: String
-				},
 				small: {
 					type: Boolean
 				},
@@ -74,7 +71,7 @@ D2L Profile Image Hypermedia
 				D2L.PolymerBehaviors.Siren.EntityBehavior
 			],
 			observers: [
-				'_configureProfileImage(entity)',
+				'_configureProfileImage(entity, href)',
 			],
 			ready: function() {
 				this.addEventListener('d2l-siren-entity-error', function() {
@@ -85,6 +82,13 @@ D2L Profile Image Hypermedia
 				});
 			},
 			_configureProfileImage: function(entity) {
+				if(!this._loading) {
+					this.set('_imageUrl', '');
+					this.set('_firstName', '');
+					this.set('_lastName', '');
+					this.set('_colourId', -1);
+				}
+
 				if (!entity) {
 					return Promise.resolve();
 				}
