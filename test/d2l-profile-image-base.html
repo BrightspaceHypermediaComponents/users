@@ -4,6 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 		<title>d2l-profile-image-base test</title>
+		<!-- For IE11 -->
+		<script src="../../lie/dist/lie.polyfill.min.js"></script>
+		<!-- For IE11 -->
+		<script src="../../fetch/fetch.js"></script>
+
 		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 		<script src="../../web-component-tester/browser.js"></script>
 		<link rel="import" href="../components/d2l-profile-image-base.html">
@@ -80,20 +85,20 @@
 				});
 
 				[
-					{ imageUrl: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'avatar' },
-					{ imageUrl: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: true, displayType: 'initials' },
-					{ imageUrl: 'validUrl', colourId: 1, firstName: '', failedToLoadImage: true, displayType: 'shady' },
-					{ imageUrl: '', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'initials' },
-					{ imageUrl: '', colourId: -1, firstName: 'first', failedToLoadImage: false, displayType: 'shady' },
-					{ imageUrl: '', colourId: 1, firstName: '', failedToLoadImage: false, displayType: 'shady' }
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'avatar' },
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: true, displayType: 'initials' },
+					{ href: 'validUrl', colourId: 1, firstName: '', failedToLoadImage: true, displayType: 'shady' },
+					{ href: '', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'initials' },
+					{ href: '', colourId: -1, firstName: 'first', failedToLoadImage: false, displayType: 'shady' },
+					{ href: '', colourId: 1, firstName: '', failedToLoadImage: false, displayType: 'shady' }
 				].forEach(function(t) {
 					test('_displayType is "' + t.displayType + '" when '
-						+ 'imageUrl is "' + t.imageUrl + '" and '
+						+ 'href is "' + t.href + '" and '
 						+ 'colourId is "' + t.colourId + '" and '
 						+ 'firstName is "' + t.firstName + '" and '
 						+ '_failedToLoadImage is "' + t.failedToLoadImage + '"',
 					function() {
-						defaultElement.set('imageUrl', t.imageUrl);
+						defaultElement.set('href', t.href);
 						defaultElement.set('colourId', t.colourId);
 						defaultElement.set('firstName', t.firstName);
 						defaultElement.set('_failedToLoadImage', t.failedToLoadImage);

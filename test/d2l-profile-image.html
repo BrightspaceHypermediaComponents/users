@@ -186,7 +186,7 @@
 								assert.equal(defaultElement._imageUrl, isDefaultImage ? '' : expectedImage);
 
 								var profileImage = Polymer.dom(defaultElement.root).querySelector('#d2l-profile-image');
-								assert.equal(profileImage.imageUrl, isDefaultImage ? '' : expectedImage);
+								assert.equal(profileImage.href, isDefaultImage ? '' : expectedImage);
 
 								done();
 							});

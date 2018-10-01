@@ -3,6 +3,7 @@
 <link rel="import" href="../../d2l-icons/d2l-icon.html">
 <link rel="import" href="../../d2l-icons/tier3-icons.html">
 
+<link rel="import" href="../../d2l-fetch/d2l-fetch.html">
 <link rel="import" href="./styles/d2l-profile-image-shared-styles.html">
 
 <!--
@@ -56,7 +57,7 @@ D2L Profile Image
 		</template>
 
 		<template is="dom-if" if="[[_showAvatar(_displayType)]]">
-			<img draggable="false" src="[[imageUrl]]" onError="[[_failedToLoadImageFunc()]]">
+			<img draggable="false" src=[[_imageUrl]] onError="[[_failedToLoadImageFunc()]]">
 		</template>
 
 	</template>
@@ -77,10 +78,13 @@ D2L Profile Image
 					value: -1,
 					observer: '_handleColourId'
 				},
-				imageUrl: {
+				href: {
 					type: String,
 					value: '',
 					observer: '_resetImageState'
+				},
+				_imageUrl: {
+					type: String
 				},
 				_displayType: {
 					type: String,
@@ -120,7 +124,7 @@ D2L Profile Image
 				'#59616C'
 			],
 			observers: [
-				'_setDisplayType(imageUrl, _failedToLoadImage, colourId, firstName)'
+				'_setDisplayType(href, _failedToLoadImage, colourId, firstName)'
 			],
 			attached: function() {
 				this._handleColourId();
@@ -129,8 +133,8 @@ D2L Profile Image
 				var backgroundColour = this._getInitialedBackgroundColour(this.colourId);
 				this.updateStyles({'--initials-background-color': backgroundColour});
 			},
-			_setDisplayType: function(imageUrl, failedToLoadImage, colourId, firstName) {
-				if (imageUrl && !failedToLoadImage) {
+			_setDisplayType: function(href, failedToLoadImage, colourId, firstName) {
+				if (href && !failedToLoadImage) {
 					this.set('_displayType', 'avatar');
 					return;
 				}
@@ -163,7 +167,17 @@ D2L Profile Image
 				return '';
 			},
 			_resetImageState: function() {
-				this.set('_failedToLoadImage', false);
+				var headers = new Headers();
+				headers.append('Authorization', 'Bearer ' + this.token);
+
+				window.d2lfetch.fetch(this.href, {method: 'GET', headers: headers})
+				.then(function(resp){
+					return resp.blob();
+				})
+				.then(function(blob){
+					this.set('_imageUrl', URL.createObjectURL(blob));
+					this.set('_failedToLoadImage', false);
+				}.bind(this))
 			},
 			_showAvatar: function(displayType) {
 				return displayType === 'avatar';
