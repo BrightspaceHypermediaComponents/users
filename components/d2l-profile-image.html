@@ -1,5 +1,6 @@
 <link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../../d2l-fetch-siren-entity-behavior/d2l-fetch-siren-entity-behavior.html">
+<link rel="import" href="../../d2l-polymer-siren-behaviors/store/entity-behavior.html">
+<link rel="import" href="../../d2l-polymer-siren-behaviors/store/siren-action-behavior.html">
 
 <link rel="import" href="./d2l-profile-image-base.html">
 
@@ -33,10 +34,6 @@ D2L Profile Image Hypermedia
 		Polymer({
 			is: 'd2l-profile-image',
 			properties: {
-				href: {
-					type: String,
-					observer: '_configureProfileImage'
-				},
 				small: {
 					type: Boolean
 				},
@@ -71,16 +68,32 @@ D2L Profile Image Hypermedia
 				}
 			},
 			behaviors: [
-				D2L.PolymerBehaviors.FetchSirenEntityBehavior
+				D2L.PolymerBehaviors.Siren.EntityBehavior
 			],
-			_configureProfileImage: function() {
-				this._fetchUserInformation()
+			observers: [
+				'_configureProfileImage(entity, href)',
+			],
+			ready: function() {
+				this.addEventListener('d2l-siren-entity-error', function() {
+					this._configureProfileImage(null)
 					.then(function() {
 						this.set('_loading', false);
 					}.bind(this));
+				});
 			},
-			_fetchUserInformation: function() {
-				return this._fetchEntity(this.href)
+			_configureProfileImage: function(entity) {
+				if(!this._loading) {
+					this.set('_imageUrl', '');
+					this.set('_firstName', '');
+					this.set('_lastName', '');
+					this.set('_colourId', -1);
+				}
+
+				if (!entity) {
+					return Promise.resolve();
+				}
+
+				return Promise.resolve(entity)
 					.then(function(data) {
 
 						this.set('_imageUrl', '');
@@ -123,6 +136,9 @@ D2L Profile Image Hypermedia
 						this.set('_firstName', '');
 						this.set('_lastName', '');
 						this.set('_colourId', -1);
+					}.bind(this))
+					.then(function() {
+						this.set('_loading', false);
 					}.bind(this));
 			}
 		});
