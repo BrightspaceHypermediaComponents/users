@@ -139,6 +139,7 @@ D2L Profile Image
 			},
 			ready: function() {
 					this._domReady = true;
+					this._resetImageState();
 			},
 			_handleColourId: function() {
 				var backgroundColour = this._getInitialedBackgroundColour(this.colourId);
@@ -156,6 +157,7 @@ D2L Profile Image
 						colourId > 0 &&
 						firstName
 				) {
+
 					this.set('_displayType', 'initials');
 				}
 				else {
