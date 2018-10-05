@@ -194,7 +194,7 @@
 				});
 
 				[true, false].forEach(function(domReady) {
-					test('_resetImageState sets _imageLoading to false when only when domReady is ' + domReady, function() {
+					test('_resetImageState sets _imageLoading to false when only when domReady is true', function() {
 						defaultElement._domReady = domReady;
 						var setSpy = sandbox.spy(defaultElement, 'set');
 
