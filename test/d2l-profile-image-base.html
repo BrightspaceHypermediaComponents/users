@@ -4,6 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 		<title>d2l-profile-image-base test</title>
+		<!-- For IE11 -->
+		<script src="../../lie/dist/lie.polyfill.min.js"></script>
+		<!-- For IE11 -->
+		<script src="../../fetch/fetch.js"></script>
+
 		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 		<script src="../../web-component-tester/browser.js"></script>
 		<link rel="import" href="../components/d2l-profile-image-base.html">
@@ -40,12 +45,19 @@
 				var sizes = ['small', 'medium', 'large', 'x-large'];
 				var elements = {};
 				var defaultElement;
+				var sandbox;
 
 				setup(function() {
+					sandbox = sinon.sandbox.create();
+
 					defaultElement = fixture('d2l-profile-image-fixture-default');
 					sizes.forEach(function(size) {
 						elements[size] = fixture('d2l-profile-image-fixture-' + size);
 					});
+				});
+
+				teardown(function() {
+					sandbox.restore();
 				});
 
 				// Specification can be found at
@@ -80,23 +92,29 @@
 				});
 
 				[
-					{ imageUrl: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'avatar' },
-					{ imageUrl: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: true, displayType: 'initials' },
-					{ imageUrl: 'validUrl', colourId: 1, firstName: '', failedToLoadImage: true, displayType: 'shady' },
-					{ imageUrl: '', colourId: 1, firstName: 'first', failedToLoadImage: false, displayType: 'initials' },
-					{ imageUrl: '', colourId: -1, firstName: 'first', failedToLoadImage: false, displayType: 'shady' },
-					{ imageUrl: '', colourId: 1, firstName: '', failedToLoadImage: false, displayType: 'shady' }
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, imageLoading: false, domReady: false, displayType: 'empty'},
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, imageLoading: true, domReady: true, displayType: 'empty'},
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: false, imageLoading: false, domReady: true, displayType: 'avatar'},
+					{ href: 'validUrl', colourId: 1, firstName: 'first', failedToLoadImage: true, imageLoading: false, domReady: true, displayType: 'initials'},
+					{ href: 'validUrl', colourId: 1, firstName: '', failedToLoadImage: true, imageLoading: false, domReady: true, displayType: 'shady' },
+					{ href: '', colourId: 1, firstName: 'first', failedToLoadImage: false, imageLoading: false, domReady: true, displayType: 'initials' },
+					{ href: '', colourId: -1, firstName: 'first', failedToLoadImage: false, imageLoading: false, domReady: true, displayType: 'shady' },
+					{ href: '', colourId: 1, firstName: '', failedToLoadImage: false, imageLoading: false, domReady: true, displayType: 'shady' }
 				].forEach(function(t) {
 					test('_displayType is "' + t.displayType + '" when '
-						+ 'imageUrl is "' + t.imageUrl + '" and '
+						+ 'href is "' + t.href + '" and '
 						+ 'colourId is "' + t.colourId + '" and '
 						+ 'firstName is "' + t.firstName + '" and '
-						+ '_failedToLoadImage is "' + t.failedToLoadImage + '"',
+						+ '_failedToLoadImage is "' + t.failedToLoadImage + '" and '
+						+ '_imageLoading is"' + t.imageLoading + '" and '
+						+ '_domReady is "' + t.domReady + '"',
 					function() {
-						defaultElement.set('imageUrl', t.imageUrl);
+						defaultElement.set('href', t.href);
+						defaultElement.set('_imageLoading', t.imageLoading);
 						defaultElement.set('colourId', t.colourId);
 						defaultElement.set('firstName', t.firstName);
 						defaultElement.set('_failedToLoadImage', t.failedToLoadImage);
+						defaultElement.set('_domReady', t.domReady);
 						Polymer.dom.flush();
 						assert.equal(defaultElement._displayType, t.displayType);
 					});
@@ -134,6 +152,88 @@
 						var colourSecondTime = defaultElement._getInitialedBackgroundColour(i);
 						assert.equal(colourSecondTime, colourMapping[i]);
 					}
+				});
+
+				//https://github.com/Brightspace/d2l-fetch-simple-cache/blob/7c2155eeae73b6c82c61e88e997fcf5cb393c2d2/src/d2lfetch-simple-cache.js#L104
+				//This piece of middleware is injected automatically from BSI and does not support fetching blob, ensure to remove
+				test('_resetImageState removes simpleCache middleware before fetch', function() {
+					defaultElement._domReady = true;
+					var removeTempSpy = sandbox.spy(window.d2lfetch, 'removeTemp');
+
+					return defaultElement._resetImageState()
+						.then(function() {
+							assert.isOk(removeTempSpy.calledWith('simpleCache'));
+						});
+				});
+
+				//https://github.com/BrightspaceHypermediaComponents/users/pull/3#discussion_r223137011
+				//This piece of middleware is injected automatically from BSI and does not support fetching blob, ensure to remove
+				test('_resetImageState removes dedupe middleware before fetch', function() {
+					defaultElement._domReady = true;
+
+					var dedupeStub = sinon.stub();
+					dedupeStub.withArgs(sinon.match('dedupe'))
+						.returns({ fetch: function() { return Promise.resolve(); } });
+
+					var simpleCacheStub = sandbox.stub();
+					simpleCacheStub
+						.withArgs(sinon.match('simpleCache'))
+						.returns({removeTemp: dedupeStub});
+
+					window.d2lfetch.removeTemp = simpleCacheStub;
+
+					return defaultElement._resetImageState()
+						.then(function() {
+							assert.isOk(dedupeStub.calledWith('dedupe'));
+						});
+				});
+
+				test('_resetImageState will fetch image with correct headers', function() {
+					var expectedToken = 'expectedToken';
+					defaultElement.token = expectedToken;
+					defaultElement._domReady = true;
+
+					var headers = new Headers();
+					headers.append('Authorization', 'Bearer ' + expectedToken);
+
+					var fetchStub = sinon.stub().returns(Promise.resolve());
+					var dedupeStub = sinon.stub();
+					dedupeStub.withArgs(sinon.match('dedupe'))
+						.returns({ fetch: fetchStub });
+
+					window.d2lfetch.removeTemp = sandbox.stub();
+					window.d2lfetch.removeTemp
+						.withArgs(sinon.match('simpleCache'))
+						.returns({removeTemp: dedupeStub});
+
+					return defaultElement._resetImageState()
+						.then(function() {
+							assert.isOk(fetchStub.calledWith(defaultElement.href, sinon.match(function(v) {
+								var correctMethod = v.method === 'GET';
+								var correctHeaderToken = v.headers.get('Authorization') === 'Bearer ' + expectedToken;
+
+								return correctMethod && correctHeaderToken;
+							})));
+						});
+				});
+
+				[true, false].forEach(function(domReady) {
+					test('_resetImageState sets _imageLoading to false when only when domReady is true', function() {
+						defaultElement._domReady = domReady;
+						var setSpy = sandbox.spy(defaultElement, 'set');
+
+						return defaultElement._resetImageState()
+							.then(function() {
+								assert.isOk(setSpy.calledWith('_imageLoading', true));
+
+								if (domReady) {
+									assert.isOk(setSpy.calledWith('_imageLoading', false));
+								}
+								else {
+									assert.isOk(setSpy.withArgs('_imageLoading', false).notCalled);
+								}
+							});
+					});
 				});
 
 			});

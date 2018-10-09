@@ -5,6 +5,8 @@
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 		<title>d2l-profile-image-base demo</title>
 		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../lie/dist/lie.polyfill.min.js"></script> <!-- For IE11 -->
+		<script src="../../fetch/fetch.js"></script> <!-- For IE11 -->
 		<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 		<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 		<link rel="import" href="../../d2l-typography/d2l-typography.html">
@@ -134,7 +136,7 @@
 
 						<d2l-profile-image-base
 							colour-id="3"
-							image-url="./img/invalid.png"
+							href="./img/invalid.png"
 							small>
 						</d2l-profile-image-base>
 						<br/>
@@ -142,7 +144,7 @@
 						<d2l-profile-image-base
 							first-name="first"
 							colour-id="6"
-							image-url="./img/invalid.png"
+							href="./img/invalid.png"
 							medium>
 						</d2l-profile-image-base>
 						<br/>
@@ -151,7 +153,7 @@
 							first-name="first"
 							last-name="last"
 							colour-id="10"
-							image-url="./img/invalid.png"
+							href="./img/invalid.png"
 							large>
 						</d2l-profile-image-base>
 						<br/>
@@ -160,7 +162,7 @@
 							first-name="first"
 							last-name="last"
 							colour-id="10"
-							image-url="./img/d2l-moose.png"
+							href="./img/d2l-moose.png"
 							x-large>
 						</d2l-profile-image-base>
 
