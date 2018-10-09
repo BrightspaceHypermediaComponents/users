@@ -166,6 +166,28 @@
 						});
 				});
 
+				//https://github.com/BrightspaceHypermediaComponents/users/pull/3#discussion_r223137011
+				//This piece of middleware is injected automatically from BSI and does not support fetching blob, ensure to remove
+				test('_resetImageState removes dedupe middleware before fetch', function() {
+					defaultElement._domReady = true;
+
+					var dedupeStub = sinon.stub();
+					dedupeStub.withArgs(sinon.match('dedupe'))
+						.returns({ fetch: function() { return Promise.resolve(); } });
+
+					var simpleCacheStub = sandbox.stub();
+					simpleCacheStub
+						.withArgs(sinon.match('simpleCache'))
+						.returns({removeTemp: dedupeStub});
+
+					window.d2lfetch.removeTemp = simpleCacheStub;
+
+					return defaultElement._resetImageState()
+						.then(function() {
+							assert.isOk(dedupeStub.calledWith('dedupe'));
+						});
+				});
+
 				test('_resetImageState will fetch image with correct headers', function() {
 					var expectedToken = 'expectedToken';
 					defaultElement.token = expectedToken;
@@ -174,13 +196,15 @@
 					var headers = new Headers();
 					headers.append('Authorization', 'Bearer ' + expectedToken);
 
-					var removeTempMock = { fetch: function() {} };
+					var fetchStub = sinon.stub().returns(Promise.resolve());
+					var dedupeStub = sinon.stub();
+					dedupeStub.withArgs(sinon.match('dedupe'))
+						.returns({ fetch: fetchStub });
+
 					window.d2lfetch.removeTemp = sandbox.stub();
 					window.d2lfetch.removeTemp
 						.withArgs(sinon.match('simpleCache'))
-						.returns(removeTempMock);
-
-					var fetchStub = sinon.stub(removeTempMock, 'fetch').returns(Promise.resolve());
+						.returns({removeTemp: dedupeStub});
 
 					return defaultElement._resetImageState()
 						.then(function() {

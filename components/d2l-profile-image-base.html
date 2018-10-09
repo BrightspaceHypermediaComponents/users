@@ -196,6 +196,7 @@ D2L Profile Image
 
 				return window.d2lfetch
 					.removeTemp('simpleCache')
+					.removeTemp('dedupe')
 					.fetch(this.href, {method: 'GET', headers: headers})
 					.then(function(resp){
 						return resp.blob();
