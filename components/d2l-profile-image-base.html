@@ -88,7 +88,8 @@ D2L Profile Image
 					value: ''
 				},
 				_imageUrl: {
-					type: String
+					type: String,
+					value: ''
 				},
 				_displayType: {
 					type: String,
@@ -142,8 +143,10 @@ D2L Profile Image
 				this._handleColourId();
 			},
 			ready: function() {
-					this._domReady = true;
+				this._domReady = true;
+				if(!this._imageUrl && this.href) {
 					this._resetImageState();
+				}
 			},
 			_handleColourId: function() {
 				var backgroundColour = this._getInitialedBackgroundColour(this.colourId);

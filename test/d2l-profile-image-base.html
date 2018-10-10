@@ -236,6 +236,27 @@
 					});
 				});
 
+				[
+					{ href: '', imageUrl: '', resetImageState: false },
+					{ href: '', imageUrl: 'valid', resetImageState: false },
+					{ href: 'valid', imageUrl: '', resetImageState: true },
+					{ href: 'valid', imageUrl: 'valid', resetImageState: false },
+				].forEach(function(t) {
+					test('when image is ready, resetImageState only called when imageUrl is not set and href is set', function() {
+						defaultElement.href = t.href;
+						defaultElement._imageUrl = t.imageUrl;
+
+						var resetImageStateSpy = sandbox.spy(defaultElement, '_resetImageState');
+						defaultElement.ready();
+
+						if (t.resetImageState) {
+							assert.isOk(resetImageStateSpy.calledOnce);
+						}
+						else {
+							assert.isOk(resetImageStateSpy.notCalled);
+						}
+					});
+				});
 			});
 		</script>
 	</body>
