@@ -106,7 +106,7 @@ D2L Profile Image Hypermedia
 								var profileImage = userProfile.getSubEntityByRel('https://api.brightspace.com/rels/profile-image');
 								if (profileImage && !profileImage.hasClass('default-image')) {
 
-									var imageEntity = profileImage.getLinkByRel('https://api.brightspace.com/rels/thumbnail#regular');
+									var imageEntity = profileImage.getLinkByRel('alternate');
 									this.set('_imageUrl', imageEntity.href);
 								}
 							}
