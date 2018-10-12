@@ -191,6 +191,8 @@ D2L Profile Image
 			},
 			_resetImageState: function() {
 				this.set('_imageLoading', true);
+				this.set('_failedToLoadImage', false);
+
 				if(!this._domReady) {
 					return Promise.resolve();
 				}
@@ -206,10 +208,9 @@ D2L Profile Image
 					})
 					.then(function(blob){
 						this.set('_imageUrl', URL.createObjectURL(blob));
-						this.set('_failedToLoadImage', false);
 					}.bind(this))
 					.catch(function(){
-						this.set('_failedToLoadImage', true);
+						this.set('_imageUrl', this.href);
 					}.bind(this))
 					.then(function() {
 						this.set('_imageLoading', false);

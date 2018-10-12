@@ -171,7 +171,7 @@
 				test('_resetImageState removes dedupe middleware before fetch', function() {
 					defaultElement._domReady = true;
 
-					var dedupeStub = sinon.stub();
+					var dedupeStub = sandbox.stub();
 					dedupeStub.withArgs(sinon.match('dedupe'))
 						.returns({ fetch: function() { return Promise.resolve(); } });
 
@@ -189,6 +189,8 @@
 				});
 
 				test('_resetImageState will fetch image with correct headers', function() {
+					var expectedImageUrl = 'expectedImageUrl';
+
 					var expectedToken = 'expectedToken';
 					defaultElement.token = expectedToken;
 					defaultElement._domReady = true;
@@ -196,18 +198,33 @@
 					var headers = new Headers();
 					headers.append('Authorization', 'Bearer ' + expectedToken);
 
-					var fetchStub = sinon.stub().returns(Promise.resolve());
-					var dedupeStub = sinon.stub();
+					var blobStub = sandbox.stub();
+					URL.createObjectURL = blobStub;
+					URL.createObjectURL
+						.withArgs(sinon.match('blob'))
+						.returns(expectedImageUrl);
+
+					var fetchStub = sandbox.stub()
+						.returns(Promise.resolve(
+							{
+								'blob': function() {
+									return Promise.resolve('blob');
+								}
+							}
+						));
+					var dedupeStub = sandbox.stub();
 					dedupeStub.withArgs(sinon.match('dedupe'))
 						.returns({ fetch: fetchStub });
 
-					window.d2lfetch.removeTemp = sandbox.stub();
-					window.d2lfetch.removeTemp
+					var simpleCacheStub = sandbox.stub();
+					simpleCacheStub
 						.withArgs(sinon.match('simpleCache'))
 						.returns({removeTemp: dedupeStub});
+					window.d2lfetch.removeTemp = simpleCacheStub;
 
 					return defaultElement._resetImageState()
 						.then(function() {
+							assert.equal(defaultElement._imageUrl, expectedImageUrl);
 							assert.isOk(fetchStub.calledWith(defaultElement.href, sinon.match(function(v) {
 								var correctMethod = v.method === 'GET';
 								var correctHeaderToken = v.headers.get('Authorization') === 'Bearer ' + expectedToken;
@@ -256,6 +273,33 @@
 							assert.isOk(resetImageStateSpy.notCalled);
 						}
 					});
+				});
+
+				// BSI CDN uses opaque resposnes, cannot fetch images via javascript
+				// When failing to fetchn images with javascript allow the image tag to specify the given image directly
+				test('When failing to retrieve image via javascript, fallback and set the _imageUrl to given href', function() {
+					var expectedHref = 'expectedHref';
+
+					var fetchStub = sandbox.stub()
+						.returns(Promise.reject());
+
+					var dedupeStub = sandbox.stub();
+					dedupeStub.withArgs(sinon.match('dedupe'))
+						.returns({ fetch: fetchStub });
+
+					var simpleCacheStub = sandbox.stub();
+					simpleCacheStub
+						.withArgs(sinon.match('simpleCache'))
+						.returns({removeTemp: dedupeStub});
+					window.d2lfetch.removeTemp = simpleCacheStub;
+
+					defaultElement.href = expectedHref;
+					defaultElement._domReady = true;
+
+					return defaultElement._resetImageState()
+						.then(function() {
+							assert.equal(defaultElement._imageUrl, expectedHref);
+						});
 				});
 			});
 		</script>
