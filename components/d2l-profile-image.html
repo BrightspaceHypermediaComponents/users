@@ -1,6 +1,7 @@
 <link rel="import" href="../../polymer/polymer.html">
 <link rel="import" href="../../d2l-polymer-siren-behaviors/store/entity-behavior.html">
 <link rel="import" href="../../d2l-polymer-siren-behaviors/store/siren-action-behavior.html">
+<link rel="import" href="../../d2l-hm-constants-behavior/d2l-hm-constants-behavior.html">
 
 <link rel="import" href="./d2l-profile-image-base.html">
 
@@ -69,7 +70,8 @@ D2L Profile Image Hypermedia
 				}
 			},
 			behaviors: [
-				D2L.PolymerBehaviors.Siren.EntityBehavior
+				D2L.PolymerBehaviors.Siren.EntityBehavior,
+				D2L.Hypermedia.HMConstantsBehavior
 			],
 			observers: [
 				'_configureProfileImage(entity, href)',
@@ -97,12 +99,12 @@ D2L Profile Image Hypermedia
 					.then(function(data) {
 
 						this.set('_imageUrl', '');
-						if (data.hasSubEntityByRel('https://api.brightspace.com/rels/user-profile')) {
+						if (data.hasSubEntityByRel(this.HypermediaRels.userProfile)) {
 
-							var userProfile = data.getSubEntityByRel('https://api.brightspace.com/rels/user-profile');
+							var userProfile = data.getSubEntityByRel(this.HypermediaRels.userProfile);
 							if (userProfile) {
 
-								var profileImage = userProfile.getSubEntityByRel('https://api.brightspace.com/rels/profile-image');
+								var profileImage = userProfile.getSubEntityByRel(this.HypermediaRels.profileImage);
 								if (profileImage && !profileImage.hasClass('default-image')) {
 
 									var imageEntity = profileImage.getLinkByRel('alternate');
@@ -112,13 +114,13 @@ D2L Profile Image Hypermedia
 						}
 
 						this.set('_firstName', '');
-						var firstName = data.getSubEntityByRel('https://api.brightspace.com/rels/first-name');
+						var firstName = data.getSubEntityByRel(this.HypermediaRels.firstName);
 						if (!firstName.hasClass('default-name')) {
 							this.set('_firstName', firstName.properties.name);
 						}
 
 						this.set('_lastName', '');
-						var lastName = data.getSubEntityByRel('https://api.brightspace.com/rels/last-name');
+						var lastName = data.getSubEntityByRel(this.HypermediaRels.lastName);
 						if (!lastName.hasClass('default-name')) {
 							this.set('_lastName', lastName.properties.name);
 						}
