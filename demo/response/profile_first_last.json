@@ -46,7 +46,7 @@
 					"rel": ["https://api.brightspace.com/rels/profile-image"],
 					"links": [
 						{
-							"rel": ["https://api.brightspace.com/rels/thumbnail#regular"],
+							"rel": ["alternate"],
 							"href": "./img/d2l-moose.png"
 						}
 					]
