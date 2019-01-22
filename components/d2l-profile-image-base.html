@@ -15,47 +15,45 @@ D2L Profile Image
 <dom-module id="d2l-profile-image-base">
 	<template strip-whitespace>
 		<style include="d2l-profile-image-shared-styles">
-			img {
-				width: 100%;
+			:host {
+				display: inline-block;
+				height: var(--d2l-profile-image-size);
+				min-width: var(--d2l-profile-image-size);
+				width: var(--d2l-profile-image-size);
+			}
+			.d2l-profile-image-container {
+				border-radius: var(--d2l-profile-image-border-radius);
 				height: 100%;
-			}
-			d2l-icon {
-				overflow: visible;
-			}
-			.initials {
-				background-color: var(--initials-background-color);
-				color: var(--d2l-color-regolith);
 				width: 100%;
-				height: 100%;
-				text-align: center;
-				display : flex;
-				align-items : center;
-				justify-content: center;
 			}
+
 			.shady-person {
 				--d2l-icon-fill-color: var(--d2l-color-ferrite);
 			}
-			@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-				.shady-person{
-						width: 100%;
-						height: 100%;
-				}
+
+			.initials {
+				align-items : center;
+				background-color: var(--initials-background-color);
+				color: var(--d2l-color-regolith);
+				display : flex;
+				justify-content: center;
+				text-align: center;
 			}
 		</style>
 		<template is="dom-if" if="[[_showShadyPerson(_displayType)]]">
-			<div class="shady-person">
+			<div class="d2l-profile-image-container shady-person">
 				<d2l-icon icon="d2l-tier3:profile-pic"></d2l-icon>
 			</div>
 		</template>
 
 		<template is="dom-if" if="[[_showInitials(_displayType)]]">
-			<div id="initials" class="initials">
+			<div id="initials" class="d2l-profile-image-container initials">
 				[[_getInitials(firstName, lastName)]]
 			</div>
 		</template>
 
 		<template is="dom-if" if="[[_showAvatar(_displayType)]]">
-			<img draggable="false" src="[[_imageUrl]]" onError="[[_failedToLoadImageFunc()]]">
+			<img class="d2l-profile-image-container" draggable="false" src="[[_imageUrl]]" onError="[[_failedToLoadImageFunc()]]">
 		</template>
 
 	</template>

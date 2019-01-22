@@ -5,58 +5,42 @@
 	<template strip-whitespace>
 		<style>
 			:host {
-				display: none;
-				overflow: hidden;
+				--d2l-icon-height: 100%;
+				--d2l-icon-width: 100%;
 			}
 
 			:host([loading]) {
 				opacity: 0;
 			}
 
+			:host(:not([small]):not([medium]):not([large]):not([x-large])) {
+				display: none;
+			}
+
 			:host([small]) {
-				display: inline-block;
-				min-width: 30px;
-				width: 30px;
-				height: 30px;
-				--d2l-icon-height: 100%;
-				--d2l-icon-width: 100%;
-				border-radius: 4px;
+				--d2l-profile-image-border-radius: 4px;
+				--d2l-profile-image-size: 30px;
 				@apply --d2l-label-text;
 				margin: 0;
 			}
 
 			:host([medium]) {
-				display: inline-block;
-				min-width: 42px;
-				width: 42px;
-				height: 42px;
-				--d2l-icon-height: 100%;
-				--d2l-icon-width: 100%;
-				border-radius: 6px;
+				--d2l-profile-image-border-radius: 6px;
+				--d2l-profile-image-size: 42px;
 				@apply --d2l-heading-4;
 				margin: 0;
 			}
 
 			:host([large]) {
-				display: inline-block;
-				min-width: 60px;
-				width: 60px;
-				height: 60px;
-				--d2l-icon-height: 100%;
-				--d2l-icon-width: 100%;
-				border-radius: 8px;
+				--d2l-profile-image-border-radius: 8px;
+				--d2l-profile-image-size: 60px;
 				@apply --d2l-heading-3;
 				margin: 0;
 			}
 
 			:host([x-large]) {
-				display: inline-block;
-				min-width: 84px;
-				width: 84px;
-				height: 84px;
-				--d2l-icon-height: 100%;
-				--d2l-icon-width: 100%;
-				border-radius: 8px;
+				--d2l-profile-image-border-radius: 8px;
+				--d2l-profile-image-size: 84px;
 				@apply --d2l-heading-2;
 				margin: 0;
 			}
