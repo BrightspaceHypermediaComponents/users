@@ -18,25 +18,27 @@
 		{
 			"class": [
 				"first",
-				"name"
+				"name",
+        "default-name"
 			],
 			"rel": [
 				"https://api.brightspace.com/rels/first-name"
 			],
 			"properties": {
-				"name": "First"
+				"name": "Anonymous User"
 			}
 		},
-    {
+		{
 			"class": [
 				"last",
-				"name"
+				"name",
+				"default-name"
 			],
 			"rel": [
 				"https://api.brightspace.com/rels/last-name"
 			],
 			"properties": {
-				"name": "Last"
+				"name": "Anonymous User"
 			}
 		},
 		{
@@ -44,9 +46,10 @@
 			"entities": [
 				{
 					"rel": ["https://api.brightspace.com/rels/profile-image"],
+					"class": ["default-image"],
 					"links": [
 						{
-							"rel": ["alternate"],
+							"rel": ["https://api.brightspace.com/rels/thumbnail#regular"],
 							"href": "./img/d2l-moose.png"
 						}
 					]

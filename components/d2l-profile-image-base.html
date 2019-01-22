@@ -14,36 +14,34 @@ D2L Profile Image
 
 <dom-module id="d2l-profile-image-base">
 	<template strip-whitespace>
-
 		<style include="d2l-profile-image-shared-styles">
-				img {
-					width: 100%;
-					height: 100%;
+			img {
+				width: 100%;
+				height: 100%;
+			}
+			d2l-icon {
+				overflow: visible;
+			}
+			.initials {
+				background-color: var(--initials-background-color);
+				color: var(--d2l-color-regolith);
+				width: 100%;
+				height: 100%;
+				text-align: center;
+				display : flex;
+				align-items : center;
+				justify-content: center;
+			}
+			.shady-person {
+				--d2l-icon-fill-color: var(--d2l-color-ferrite);
+			}
+			@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+				.shady-person{
+						width: 100%;
+						height: 100%;
 				}
-				d2l-icon {
-					overflow: visible;
-				}
-				.initials {
-					background-color: var(--initials-background-color);
-					color: var(--d2l-color-regolith);
-					width: 100%;
-					height: 100%;
-					text-align: center;
-					display : flex;
-					align-items : center;
-					justify-content: center;
-				}
-				.shady-person {
-					--d2l-icon-fill-color: var(--d2l-color-ferrite);
-				}
-				@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-					.shady-person{
-							width: 100%;
-							height: 100%;
-					}
-				}
-			</style>
-		</custom-style>
+			}
+		</style>
 		<template is="dom-if" if="[[_showShadyPerson(_displayType)]]">
 			<div class="shady-person">
 				<d2l-icon icon="d2l-tier3:profile-pic"></d2l-icon>

@@ -25,149 +25,68 @@
 	</head>
 	<body unresolved class="d2l-typography">
 		<div class="vertical-section-container centered">
-			<h3>d2l-profile-image-base</h3>
+			<h3>Shady person (only size attributes set)</h3>
 			<demo-snippet>
 				<template>
 					Specification for the design can be found at
 					<a href="http://design.d2l/components/profile-images/">design.d2l</a>.
 					<hr/>
 
-					Below is how the profile-image will be displayed when no attributes are set.
-					<ul>
-						<li>
-							Invalid/Missing image size will not show anything on the page
-						</li>
-						<li>
-							Small image size
-						</li>
-						<li>
-							Medium image size
-						</li>
-						<li>
-							Large image size
-						</li>
-						<li>
-							X-Large image size
-						</li>
-					</ul>
-					<hr/>
-
+					<h4>Invalid/Missing image size will not show anything on the page</h4>
 					<d2l-profile-image-base></d2l-profile-image-base>
-					<br/>
 
+					<h4>Small image size</h4>
 					<d2l-profile-image-base small></d2l-profile-image-base>
-					<br/>
 
+					<h4>Medium image size</h4>
 					<d2l-profile-image-base medium></d2l-profile-image-base>
-					<br/>
 
+					<h4>Large image size</h4>
 					<d2l-profile-image-base large></d2l-profile-image-base>
-					<br/>
 
+					<h4>X-Large image size</h4>
 					<d2l-profile-image-base x-large></d2l-profile-image-base>
+
 				</template>
 			</demo-snippet>
+
+			<h3>Avatar with Initials</h3>
 			<demo-snippet>
 				<template>
-					Demonstrated below are some examples when trying to load an avatar with initials:
-					<ul>
-						<li>
-							Initials fail to display because the colour-id is not specified
-						</li>
-						<li>
-							Initials fail to display because the first-name attribute is invalid/missing
-						</li>
-						<li>
-							Initials shown incomplete because last-name attribute is invalid/missing
-						</li>
-						<li>
-							Initials shown complete beause colour-id, first-name and last-name are all valid
-						</li>
-					</ul>
-					<hr/>
 
-					<d2l-profile-image-base
-						first-name="first"
-						last-name="last"
-						small>
-					</d2l-profile-image-base>
-					<br/>
+					<h4>Initials fail to display because the colour-id is not specified</h4>
+					<d2l-profile-image-base first-name="first" last-name="last" small></d2l-profile-image-base>
 
-					<d2l-profile-image-base
-						last-name="last"
-						colour-id="2"
-						medium>
-					</d2l-profile-image-base>
-					<br/>
+					<h4>Initials fail to display because the first-name attribute is invalid/missing</h4>
+					<d2l-profile-image-base last-name="last" colour-id="2" medium></d2l-profile-image-base>
 
-					<d2l-profile-image-base
-						first-name="first"
-						colour-id="3"
-						large>
-					</d2l-profile-image-base>
-					<br/>
+					<h4>Initials shown incomplete because last-name attribute is invalid/missing</h4>
+					<d2l-profile-image-base first-name="first" colour-id="3" large></d2l-profile-image-base>
 
-					<d2l-profile-image-base
-						first-name="FIRST"
-						last-name="LAST"
-						colour-id="404"
-						x-large>
-					</d2l-profile-image-base>
+					<h4>Initials shown complete beause colour-id, first-name and last-name are all valid</h4>
+					<d2l-profile-image-base first-name="FIRST" last-name="LAST" colour-id="404" x-large></d2l-profile-image-base>
+
 				</template>
 			</demo-snippet>
-				<demo-snippet>
-					<template>
-						Demonstrated below are some examples when trying to load an avatar with an image:
-						<ul>
-							<li>
-								Image fails to load, and no valid attributes to provide initials
-							</li>
-							<li>
-								Image fails to load, with missing last-name but valid attributes to provide initials
-							</li>
-							<li>
-								Image fails to load, with valid attributes to provide initials
-							</li>
-							<li>
-								Image loads successfully
-							</li>
-						</ul>
-						<hr/>
 
-						<d2l-profile-image-base
-							colour-id="3"
-							href="./img/invalid.png"
-							small>
-						</d2l-profile-image-base>
-						<br/>
+			<h3>Avatar with Initials</h3>
+			<demo-snippet>
+				<template>
 
-						<d2l-profile-image-base
-							first-name="first"
-							colour-id="6"
-							href="./img/invalid.png"
-							medium>
-						</d2l-profile-image-base>
-						<br/>
+					<h4>Image fails to load, and no valid attributes to provide initials</h4>
+					<d2l-profile-image-base colour-id="3" href="./img/invalid.png" small></d2l-profile-image-base>
 
-						<d2l-profile-image-base
-							first-name="first"
-							last-name="last"
-							colour-id="10"
-							href="./img/invalid.png"
-							large>
-						</d2l-profile-image-base>
-						<br/>
+					<h4>Image fails to load, with missing last-name but valid attributes to provide initials</h4>
+					<d2l-profile-image-base first-name="first" colour-id="6" href="./img/invalid.png" medium></d2l-profile-image-base>
 
-						<d2l-profile-image-base
-							first-name="first"
-							last-name="last"
-							colour-id="10"
-							href="./img/d2l-moose.png"
-							x-large>
-						</d2l-profile-image-base>
+					<h4>Image fails to load, with valid attributes to provide initials</h4>
+					<d2l-profile-image-base first-name="first" last-name="last" colour-id="10" href="./img/invalid.png" large></d2l-profile-image-base>
 
-					</template>
-				</demo-snippet>
+					<h4>Image loads successfully</h4>
+					<d2l-profile-image-base first-name="first" last-name="last" colour-id="10" href="./img/d2l-moose.png" x-large></d2l-profile-image-base>
+
+				</template>
+			</demo-snippet>
 		</div>
 	</body>
 </html>
