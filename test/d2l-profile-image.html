@@ -24,6 +24,7 @@
 	</test-fixture>
 	<script type="module">
 import '../components/d2l-profile-image.js';
+import SirenParse from 'siren-parser';
 import { flush as flush$0, dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 suite('d2l-profile-image', function() {
 
@@ -115,7 +116,7 @@ suite('d2l-profile-image', function() {
 					{ 'rel': ['self'], 'href': href }
 				]
 			};
-			var entity = window.D2L.Hypermedia.Siren.Parse(response);
+			var entity = SirenParse(response);
 
 			defaultElement._configureProfileImage(entity)
 				.then(function() {
@@ -180,7 +181,7 @@ suite('d2l-profile-image', function() {
 					{ 'rel': ['self'], 'href': href }
 				]
 			};
-			var entity = window.D2L.Hypermedia.Siren.Parse(response);
+			var entity = SirenParse(response);
 
 			defaultElement._configureProfileImage(entity)
 				.then(function() {
