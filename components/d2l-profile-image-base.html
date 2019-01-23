@@ -15,47 +15,41 @@ D2L Profile Image
 <dom-module id="d2l-profile-image-base">
 	<template strip-whitespace>
 		<style include="d2l-profile-image-shared-styles">
-			img {
-				width: 100%;
+			:host {
+				display: inline-block;
+			}
+			.d2l-profile-image-container {
 				height: 100%;
-			}
-			d2l-icon {
-				overflow: visible;
-			}
-			.initials {
-				background-color: var(--initials-background-color);
-				color: var(--d2l-color-regolith);
 				width: 100%;
-				height: 100%;
-				text-align: center;
-				display : flex;
-				align-items : center;
-				justify-content: center;
 			}
-			.shady-person {
+
+			.d2l-profile-image-container.shady-person {
 				--d2l-icon-fill-color: var(--d2l-color-ferrite);
 			}
-			@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-				.shady-person{
-						width: 100%;
-						height: 100%;
-				}
+
+			.d2l-profile-image-container.initials {
+				align-items : center;
+				background-color: var(--initials-background-color);
+				color: var(--d2l-color-regolith);
+				display : flex;
+				justify-content: center;
+				text-align: center;
 			}
 		</style>
 		<template is="dom-if" if="[[_showShadyPerson(_displayType)]]">
-			<div class="shady-person">
+			<div class="d2l-profile-image-container shady-person">
 				<d2l-icon icon="d2l-tier3:profile-pic"></d2l-icon>
 			</div>
 		</template>
 
 		<template is="dom-if" if="[[_showInitials(_displayType)]]">
-			<div id="initials" class="initials">
+			<div id="initials" class="d2l-profile-image-container initials">
 				[[_getInitials(firstName, lastName)]]
 			</div>
 		</template>
 
 		<template is="dom-if" if="[[_showAvatar(_displayType)]]">
-			<img draggable="false" src="[[_imageUrl]]" onError="[[_failedToLoadImageFunc()]]">
+			<img class="d2l-profile-image-container" draggable="false" src="[[_imageUrl]]" onError="[[_failedToLoadImageFunc()]]">
 		</template>
 
 	</template>
@@ -142,7 +136,7 @@ D2L Profile Image
 			},
 			ready: function() {
 				this._domReady = true;
-				if(!this._imageUrl && this.href) {
+				if (!this._imageUrl && this.href) {
 					this._resetImageState();
 				}
 			},
@@ -151,7 +145,7 @@ D2L Profile Image
 				this.updateStyles({'--initials-background-color': backgroundColour});
 			},
 			_setDisplayType: function(href, failedToLoadImage, colourId, firstName, domReady, imageLoading) {
-				if( !domReady || (imageLoading && href)) {
+				if (!domReady || (imageLoading && href)) {
 					this.set('_displayType', 'empty');
 				}
 				else if (href && !failedToLoadImage) {
@@ -191,7 +185,7 @@ D2L Profile Image
 				this.set('_imageLoading', true);
 				this.set('_failedToLoadImage', false);
 
-				if(!this._domReady) {
+				if (!this._domReady) {
 					return Promise.resolve();
 				}
 				var headers = new Headers();
@@ -201,13 +195,13 @@ D2L Profile Image
 					.removeTemp('simpleCache')
 					.removeTemp('dedupe')
 					.fetch(this.href, {method: 'GET', headers: headers})
-					.then(function(resp){
+					.then(function(resp) {
 						return resp.blob();
 					})
-					.then(function(blob){
+					.then(function(blob) {
 						this.set('_imageUrl', URL.createObjectURL(blob));
 					}.bind(this))
-					.catch(function(){
+					.catch(function() {
 						this.set('_imageUrl', this.href);
 					}.bind(this))
 					.then(function() {
