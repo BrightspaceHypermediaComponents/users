@@ -18,31 +18,47 @@
 			}
 
 			:host([small]) {
-				--d2l-profile-image-border-radius: 4px;
-				--d2l-profile-image-size: 30px;
 				@apply --d2l-label-text;
+				height: 30px;
 				margin: 0;
+				min-width: 30px;
+				width: 30px;
+			}
+			:host([small]) .d2l-profile-image-container {
+				border-radius: 4px;
 			}
 
 			:host([medium]) {
-				--d2l-profile-image-border-radius: 6px;
-				--d2l-profile-image-size: 42px;
 				@apply --d2l-heading-4;
+				height: 42px;
 				margin: 0;
+				min-width: 42px;
+				width: 42px;
+			}
+			:host([medium]) .d2l-profile-image-container {
+				border-radius: 6px;
 			}
 
 			:host([large]) {
-				--d2l-profile-image-border-radius: 8px;
-				--d2l-profile-image-size: 60px;
 				@apply --d2l-heading-3;
+				height: 60px;
 				margin: 0;
+				min-width: 60px;
+				width: 60px;
+			}
+			:host([large]) .d2l-profile-image-container {
+				border-radius: 8px;
 			}
 
 			:host([x-large]) {
-				--d2l-profile-image-border-radius: 8px;
-				--d2l-profile-image-size: 84px;
 				@apply --d2l-heading-2;
+				height: 84px;
 				margin: 0;
+				min-width: 84px;
+				width: 84px;
+			}
+			:host([x-large]) .d2l-profile-image-container {
+				border-radius: 8px;
 			}
 		</style>
 	</template>
