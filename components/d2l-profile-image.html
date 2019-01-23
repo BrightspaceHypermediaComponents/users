@@ -78,10 +78,11 @@ D2L Profile Image Hypermedia
 				'_configureProfileImage(entity, href)',
 			],
 			ready: function() {
+				var self = this;
 				this.addEventListener('d2l-siren-entity-error', function() {
-					this._configureProfileImage(null).then(function() {
-						this.set('_loading', false);
-					}.bind(this));
+					self._configureProfileImage(null).then(function() {
+						self.set('_loading', false);
+					});
 				});
 			},
 			_configureProfileImage: function(entity) {

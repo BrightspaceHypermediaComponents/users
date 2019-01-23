@@ -136,7 +136,7 @@ D2L Profile Image
 			},
 			ready: function() {
 				this._domReady = true;
-				if(!this._imageUrl && this.href) {
+				if (!this._imageUrl && this.href) {
 					this._resetImageState();
 				}
 			},
@@ -145,7 +145,7 @@ D2L Profile Image
 				this.updateStyles({'--initials-background-color': backgroundColour});
 			},
 			_setDisplayType: function(href, failedToLoadImage, colourId, firstName, domReady, imageLoading) {
-				if( !domReady || (imageLoading && href)) {
+				if (!domReady || (imageLoading && href)) {
 					this.set('_displayType', 'empty');
 				}
 				else if (href && !failedToLoadImage) {
@@ -185,7 +185,7 @@ D2L Profile Image
 				this.set('_imageLoading', true);
 				this.set('_failedToLoadImage', false);
 
-				if(!this._domReady) {
+				if (!this._domReady) {
 					return Promise.resolve();
 				}
 				var headers = new Headers();
@@ -195,13 +195,13 @@ D2L Profile Image
 					.removeTemp('simpleCache')
 					.removeTemp('dedupe')
 					.fetch(this.href, {method: 'GET', headers: headers})
-					.then(function(resp){
+					.then(function(resp) {
 						return resp.blob();
 					})
-					.then(function(blob){
+					.then(function(blob) {
 						this.set('_imageUrl', URL.createObjectURL(blob));
 					}.bind(this))
-					.catch(function(){
+					.catch(function() {
 						this.set('_imageUrl', this.href);
 					}.bind(this))
 					.then(function() {
