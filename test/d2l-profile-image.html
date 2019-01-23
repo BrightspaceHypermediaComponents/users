@@ -74,7 +74,7 @@ suite('d2l-profile-image', function() {
 					assert.equal(profileImage.hasAttribute('loading'), false);
 					done();
 				});
-			}.bind(this));
+			});
 	});
 
 	[
@@ -130,7 +130,7 @@ suite('d2l-profile-image', function() {
 						assert.equal(profileImage.colourId, userId);
 						done();
 					});
-				}.bind(this));
+				});
 
 		});
 	});
@@ -192,7 +192,7 @@ suite('d2l-profile-image', function() {
 
 						done();
 					});
-				}.bind(this));
+				});
 		});
 	});
 });
