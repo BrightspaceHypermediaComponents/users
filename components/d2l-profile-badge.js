@@ -1,9 +1,9 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
-import 'd2l-link/d2l-link.js'
+import 'd2l-link/d2l-link.js';
 import './d2l-profile-image.js';
 import 'd2l-polymer-siren-behaviors/store/entity-behavior.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import {Rels, Classes} from 'd2l-hypermedia-constants';
+import {Rels} from 'd2l-hypermedia-constants';
 
 /**
  * @customElement
