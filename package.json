@@ -2,7 +2,7 @@
   "description": "D2L Components Using Users Hypermedia API",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BrightspaceUI/profile-image.git"
+    "url": "https://github.com/BrightspaceHypermediaComponents/users.git"
   },
   "name": "d2l-users",
   "scripts": {

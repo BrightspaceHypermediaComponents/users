@@ -10,34 +10,34 @@ import {Rels} from 'd2l-hypermedia-constants';
  * @polymer
  */
 
-class D2LProfileBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBehavior], PolymerElement) {
+class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBehavior], PolymerElement) {
 	static get template() {
-		const profileBadgeTemplate = html`
+		const userBadgeTemplate = html`
 			<style>
 				:host {
 					display: block;
 				}
-				.d2l-profile-badge-image {
+				.d2l-user-badge-image {
 					display: inline-block;
 					padding-right: 0.6rem;
 					vertical-align: middle;
 				}
-				:host(:dir(rtl)) .d2l-profile-badge-image {
+				:host(:dir(rtl)) .d2l-user-badge-image {
 					padding-right: 0;
 					padding-left: 0.6rem;
 				}
-				.d2l-profile-badge-link {
+				.d2l-user-badge-link {
 					display: inline-block;
 					vertical-align: middle;
 				}
 			</style>
-			<d2l-profile-image class="d2l-profile-badge-image" href="[[_userHref]]" token="[[token]]" large=""></d2l-profile-image>
-			<d2l-link class="d2l-profile-badge-link" href="[[_linkHref]]">[[_displayName]]</d2l-link>
+			<d2l-profile-image class="d2l-user-badge-image" href="[[_userHref]]" token="[[token]]" large=""></d2l-profile-image>
+			<d2l-link class="d2l-user-badge-link" href="[[_linkHref]]">[[_displayName]]</d2l-link>
 		`;
-		profileBadgeTemplate.setAttribute('strip-whitespace', 'strip-whitespace');
-		return profileBadgeTemplate;
+		userBadgeTemplate.setAttribute('strip-whitespace', 'strip-whitespace');
+		return userBadgeTemplate;
 	}
-	static get is() { return 'd2l-profile-badge'; }
+	static get is() { return 'd2l-user-badge'; }
 	static get properties() {
 		return {
 			'displayNameHref': {
@@ -105,4 +105,4 @@ class D2LProfileBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityB
 	}
 }
 
-window.customElements.define(D2LProfileBadge.is, D2LProfileBadge);
+window.customElements.define(D2LUserBadge.is, D2LUserBadge);
