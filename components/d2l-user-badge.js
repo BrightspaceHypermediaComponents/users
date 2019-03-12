@@ -81,7 +81,9 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 			if (this.displayNameHref) {
 				this._linkHref = this.displayNameHref;
 			}
-			await this._getUserPromise(entity);
+			if (entity.hasSubEntityByRel(Rels.displayName)) {
+				this._displayName = entity.getSubEntityByRel(Rels.displayName).properties.name;
+			}
 		} catch (e) {
 			// Unable to load user from entity
 		}
@@ -93,15 +95,6 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 			return this._userFetch(href);
 		}
 		return Promise.resolve();
-	}
-
-	async _getUserPromise(userEntity) {
-		return this._followLink(userEntity, 'self')
-			.then(function(u) {
-				if (u && u.entity && u.entity.hasSubEntityByRel(Rels.displayName)) {
-					this._displayName = u.entity.getSubEntityByRel(Rels.displayName).properties.name;
-				}
-			}.bind(this));
 	}
 }
 
