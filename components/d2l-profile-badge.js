@@ -88,14 +88,8 @@ class D2LProfileBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityB
 	}
 
 	_followLink(entity, rel) {
-		let href;
 		if (entity && entity.hasLinkByRel && entity.hasLinkByRel(rel)) {
-			href = entity.getLinkByRel(rel).href;
-		} else {
-			href = '';
-		}
-
-		if (href) {
+			const href = entity.getLinkByRel(rel).href;
 			return this._userFetch(href);
 		}
 		return Promise.resolve();
