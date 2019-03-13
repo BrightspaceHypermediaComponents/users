@@ -43,7 +43,8 @@
 					done('_loadData should have rejected invalid entity');
 				})
 				.catch((err) => {
-					assert.ok(err.toString().indexOf('TypeError: entity.hasSubEntityByRel is not a function') !== -1);
+					assert.ok(err.toString().indexOf('TypeError:') !== -1);
+					assert.ok(err.toString().indexOf('hasSubEntityByRel') !== -1);
 					done();
 				})
 				.catch((err) => {
