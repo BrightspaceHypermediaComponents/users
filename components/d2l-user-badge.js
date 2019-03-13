@@ -31,7 +31,7 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 					vertical-align: middle;
 				}
 			</style>
-			<d2l-profile-image class="d2l-user-badge-image" href="[[_userHref]]" token="[[token]]" large=""></d2l-profile-image>
+			<d2l-profile-image class="d2l-user-badge-image" href="[[_userHref]]" token="[[token]]" small=""></d2l-profile-image>
 			<d2l-link class="d2l-user-badge-link" href="[[_linkHref]]">[[_displayName]]</d2l-link>
 		`;
 		userBadgeTemplate.setAttribute('strip-whitespace', 'strip-whitespace');
