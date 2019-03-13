@@ -24,5 +24,31 @@
 				done();
 			});
 		});
+		test('should reject promise on invalid entity', (done) => {
+			const invalidEntity = {
+				'entities': [
+					{
+						'rel': [
+							'https://api.brightspace.com/rels/not-display-name'
+						],
+						'properties': {
+							'name': 'Not a real name'
+						}
+					}
+				]
+			};
+
+			userBadge._loadData(invalidEntity)
+				.then(() => {
+					done('_loadData should have rejected invalid entity');
+				})
+				.catch((err) => {
+					assert.equal(err.toString(), 'TypeError: entity.hasSubEntityByRel is not a function');
+					done();
+				})
+				.catch((err) => {
+					done(err);
+				});
+		});
 	});
 })();
