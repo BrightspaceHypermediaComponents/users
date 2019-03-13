@@ -31,8 +31,8 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 					vertical-align: middle;
 				}
 			</style>
-			<d2l-profile-image class="d2l-user-badge-image" href="[[_userHref]]" token="[[token]]" small=""></d2l-profile-image>
-			<d2l-link class="d2l-user-badge-link" href="[[_linkHref]]">[[_displayName]]</d2l-link>
+			<d2l-profile-image class="d2l-user-badge-image" href="[[href]]" token="[[token]]" small=""></d2l-profile-image>
+			<d2l-link class="d2l-user-badge-link" href="[[displayNameHref]]">[[_displayName]]</d2l-link>
 		`;
 		userBadgeTemplate.setAttribute('strip-whitespace', 'strip-whitespace');
 		return userBadgeTemplate;
@@ -45,15 +45,7 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 				value: '',
 				reflectToAttribute: true
 			},
-			_userHref: {
-				type: String,
-				value: ''
-			},
 			_displayName: {
-				type: String,
-				value: ''
-			},
-			_linkHref: {
 				type: String,
 				value: ''
 			}
@@ -71,17 +63,12 @@ class D2LUserBadge extends mixinBehaviors([D2L.PolymerBehaviors.Siren.EntityBeha
 		}
 
 		try {
-			if (this.href) {
-				this._userHref = this.href;
-			}
-			if (this.displayNameHref) {
-				this._linkHref = this.displayNameHref;
-			}
 			if (entity.hasSubEntityByRel(Rels.displayName)) {
 				this._displayName = entity.getSubEntityByRel(Rels.displayName).properties.name;
 			}
 		} catch (e) {
 			// Unable to load user from entity
+			return Promise.reject(e);
 		}
 		return Promise.resolve();
 	}
