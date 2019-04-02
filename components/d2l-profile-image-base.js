@@ -16,15 +16,15 @@ export class D2LProfileImageBase extends LitElement {
 
 	static get properties() {
 		return {
-			colourId: { type: Number, reflect: true, attribute: 'colour-id' },
-			firstName: { type: String, reflect: true, attribute: 'first-name' },
-			lastName: { type: String, reflect: true, attribute: 'last-name' },
-			href: { type: String, reflect: true },
-			token: { type: String, reflect: true },
-			small: { type: Boolean, reflect: true },
-			medium: { type: Boolean, reflect: true },
-			large: { type: Boolean, reflect: true },
-			xLarge: { type: Boolean, reflect: true, attribute: 'x-large' },
+			colourId: { type: Number, attribute: 'colour-id' },
+			firstName: { type: String, attribute: 'first-name' },
+			lastName: { type: String, attribute: 'last-name' },
+			href: { type: String },
+			token: { type: String },
+			small: { type: Boolean },
+			medium: { type: Boolean },
+			large: { type: Boolean },
+			xLarge: { type: Boolean, attribute: 'x-large' },
 			_displayType: { type: String },
 			_failedToLoadImage: { type: Boolean },
 			_imageLoading: { type: Boolean },
@@ -75,20 +75,20 @@ export class D2LProfileImageBase extends LitElement {
 		super.updated(changedProperties);
 
 		changedProperties.forEach((oldValue, propName) => {
-			if (propName === 'href'
-				|| propName === '_failedToLoadImage'
-				|| propName === 'colourId'
-				|| propName === 'firstName'
-				|| propName === '_imageLoading') {
-				this._setDisplayType();
-			}
-
 			if (propName === 'colourId') {
 				this._getInitialedBackgroundColour();
 			} else if (propName === 'href') {
 				this._resetImageState();
 			} else if (propName === 'firstName' || propName === 'lastName') {
 				this._getInitials();
+			}
+
+			if (propName === 'href'
+				|| propName === '_failedToLoadImage'
+				|| propName === 'colourId'
+				|| propName === 'firstName'
+				|| propName === '_imageLoading') {
+				this._setDisplayType();
 			}
 		});
 	}

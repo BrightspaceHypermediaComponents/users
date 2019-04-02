@@ -3,143 +3,154 @@
 D2L Profile Image Hypermedia
 @demo demo/d2l-profile-image.html
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
 
-import 'd2l-polymer-siren-behaviors/store/entity-behavior.js';
-import 'd2l-polymer-siren-behaviors/store/siren-action-behavior.js';
-import { Rels } from 'd2l-hypermedia-constants';
 import './d2l-profile-image-base.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-const $_documentContainer = document.createElement('template');
+import { css, html, LitElement } from 'lit-element/lit-element.js';
+import { EntityMixin } from '../polymer-siren-mixins/entity-mixin.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
+import { Rels } from 'd2l-hypermedia-constants';
 
-$_documentContainer.innerHTML = `<dom-module id="d2l-profile-image">
-	<template strip-whitespace="">
-			<style>
-				:host {
-					display: inline-block;
-					line-height: 0;
-				}
-			</style>
-			<d2l-profile-image-base id="d2l-profile-image" small$="[[small]]" medium$="[[medium]]" large$="[[large]]" x-large$="[[xLarge]]" first-name="[[_firstName]]" last-name="[[_lastName]]" colour-id="[[_colourId]]" href="[[_imageUrl]]" token="[[token]]" loading$="[[_loading]]">
-			</d2l-profile-image-base>
-	</template>
+export class D2LProfileImage extends EntityMixin(LitElement) {
+	static get properties() {
+		return {
+			small: { type: Boolean },
+			medium: { type: Boolean },
+			large: { type: Boolean },
+			xLarge: { type: Boolean, attribute: 'x-large' },
+			_firstName: { type: String },
+			_lastName: { type: String },
+			_colourId: { type: Number	},
+			_imageUrl: { type: String },
+			_loading: { type: Boolean }
+		};
+	}
 
-</dom-module>`;
+	static get styles() {
+		return css`
+			:host {
+				display: inline-block;
+				line-height: 0;
+			}
+		`;
+	}
 
-document.head.appendChild($_documentContainer.content);
-Polymer({
-	is: 'd2l-profile-image',
-	properties: {
-		small: {
-			type: Boolean
-		},
-		medium: {
-			type: Boolean
-		},
-		large: {
-			type: Boolean
-		},
-		xLarge: {
-			type: Boolean
-		},
-		_firstName: {
-			type: String,
-			value: ''
-		},
-		_lastName: {
-			type: String,
-			value: ''
-		},
-		_colourId: {
-			type: Number,
-			value: -1
-		},
-		_imageUrl: {
-			type: String,
-			value: ''
-		},
-		_loading: {
-			type: Boolean,
-			value: true
-		}
-	},
-	behaviors: [
-		D2L.PolymerBehaviors.Siren.EntityBehavior
-	],
-	observers: [
-		'_configureProfileImage(entity, href)',
-	],
-	ready: function() {
-		var self = this;
-		this.addEventListener('d2l-siren-entity-error', function() {
-			self._configureProfileImage(null).then(function() {
-				self.set('_loading', false);
-			});
+	constructor() {
+		super();
+
+		this._loading = true;
+		this._imageUrl = '';
+		this._firstName = '';
+		this._lastName = '';
+		this._colourId = -1;
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener('d2l-siren-entity-error', this._handleSirenError, true);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener('d2l-siren-entity-error', this._handleSirenError, true);
+	}
+
+	updated(changedProperties) {
+		super.updated(changedProperties);
+
+		changedProperties.forEach((oldValue, propName) => {
+			if (propName === 'entity' || propName === 'href') {
+				this._configureProfileImage();
+			}
 		});
-	},
-	_configureProfileImage: function(entity) {
+	}
+
+	render() {
+		return html`
+			<d2l-profile-image-base
+				id="d2l-profile-image"
+				small="${ifDefined(this.small)}"
+				medium="${ifDefined(this.medium)}"
+				large="${ifDefined(this.large)}"
+				x-large="${ifDefined(this.xLarge)}"
+				first-name="${this._firstName}"
+				last-name="${this._lastName}"
+				colour-id="${this._colourId}"
+				href="${this._imageUrl}"
+				token="${this.token}"
+				?loading="${this._loading}">
+			</d2l-profile-image-base>
+		`;
+	}
+
+	_handleSirenError() {
 		if (!this._loading) {
-			this.set('_imageUrl', '');
-			this.set('_firstName', '');
-			this.set('_lastName', '');
-			this.set('_colourId', -1);
+			this._imageUrl = '';
+			this._firstName = '';
+			this._lastName = '';
+			this._colourId = -1;
 		}
 
-		if (!entity) {
+		this._loading = false;
+	}
+
+	_configureProfileImage() {
+		if (!this._loading) {
+			this._imageUrl = '';
+			this._firstName = '';
+			this._lastName = '';
+			this._colourId = -1;
+		}
+
+		if (!this.entity) {
 			return Promise.resolve();
 		}
 
-		return Promise.resolve(entity)
-			.then(function(data) {
-
-				this.set('_imageUrl', '');
+		return Promise.resolve(this.entity)
+			.then((data) => {
+				this._imageUrl = '';
 				if (data.hasSubEntityByRel(Rels.userProfile)) {
 
-					var userProfile = data.getSubEntityByRel(Rels.userProfile);
+					const userProfile = data.getSubEntityByRel(Rels.userProfile);
 					if (userProfile) {
 
-						var profileImage = userProfile.getSubEntityByRel(Rels.profileImage);
+						const profileImage = userProfile.getSubEntityByRel(Rels.profileImage);
 						if (profileImage && !profileImage.hasClass('default-image')) {
 
-							var imageEntity = profileImage.getLinkByRel('alternate');
-							this.set('_imageUrl', imageEntity.href);
+							const imageEntity = profileImage.getLinkByRel('alternate');
+							this._imageUrl = imageEntity.href;
 						}
 					}
 				}
 
-				this.set('_firstName', '');
-				var firstName = data.getSubEntityByRel(Rels.firstName);
+				this._firstName = '';
+				const firstName = data.getSubEntityByRel(Rels.firstName);
 				if (!firstName.hasClass('default-name')) {
-					this.set('_firstName', firstName.properties.name);
+					this._firstName = firstName.properties.name;
 				}
 
-				this.set('_lastName', '');
-				var lastName = data.getSubEntityByRel(Rels.lastName);
+				this._lastName = '';
+				const lastName = data.getSubEntityByRel(Rels.lastName);
 				if (!lastName.hasClass('default-name')) {
-					this.set('_lastName', lastName.properties.name);
+					this._lastName = lastName.properties.name;
 				}
 
-				this.set('_colourId', -1);
-				var selfLink = data.getLinkByRel('self').href;
-				var userId = selfLink.split('/').pop();
+				this._colourId = -1;
+				const selfLink = data.getLinkByRel('self').href;
+				const userId = selfLink.split('/').pop();
 				if (!isNaN(userId)) {
-					this.set('_colourId', userId);
+					this._colourId = userId;
 				}
-
-			}.bind(this))
-			.catch(function() {
-				this.set('_imageUrl', '');
-				this.set('_firstName', '');
-				this.set('_lastName', '');
-				this.set('_colourId', -1);
-			}.bind(this))
-			.then(function() {
-				this.set('_loading', false);
-			}.bind(this));
+			})
+			.catch(() => {
+				this._imageUrl = '';
+				this._firstName = '';
+				this._lastName = '';
+				this._colourId = -1;
+			})
+			.then(() => {
+				this._loading = false;
+			});
 	}
-});
+}
+
+customElements.define('d2l-profile-image', D2LProfileImage);
