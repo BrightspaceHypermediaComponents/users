@@ -113,8 +113,7 @@ export class D2LProfileImageBase extends LitElement {
 		else if (this._displayType === 'initials') {
 			containerClasses['initials'] = true;
 			return html`
-				<div id="initials"
-					class=${classMap(containerClasses)}
+				<div class=${classMap(containerClasses)}
 					style=${styleMap({ backgroundColor: `${this._backgroundColor}` })}>
 						${this._initials}
 				</div>

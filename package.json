@@ -18,7 +18,6 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.0.0",
     "@polymer/iron-test-helpers": "^3.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.4",
     "babel-eslint": "^10.0.1",
@@ -42,13 +41,12 @@
   "main": "d2l-users.js",
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "d2l-colors": "BrightspaceUI/colors#semver:^4",
     "d2l-core-ui": "github:BrightspaceUI/core",
     "d2l-fetch": "Brightspace/d2l-fetch.git#semver:^2",
     "d2l-hypermedia-constants": "^6",
     "d2l-icons": "BrightspaceUI/icons#semver:^6",
     "d2l-polymer-siren-behaviors": "Brightspace/polymer-siren-behaviors#semver:^1",
-    "d2l-typography": "BrightspaceUI/typography#semver:^7",
+    "demo-transfigurator": "github:dbatiste/demo-transfigurator",
     "lit-element": "^2.1.0"
   }
 }
