@@ -164,7 +164,7 @@ suite('d2l-profile-image', function() {
 
 		return defaultElement._resetImageState()
 			.then(function() {
-				assert.isOk(removeTempSpy.calledWith('simpleCache'));
+				assert.isOk(removeTempSpy.calledWith('simple-cache'));
 			});
 	});
 
@@ -179,7 +179,7 @@ suite('d2l-profile-image', function() {
 
 		var simpleCacheStub = sandbox.stub();
 		simpleCacheStub
-			.withArgs(sinon.match('simpleCache'))
+			.withArgs(sinon.match('simple-cache'))
 			.returns({removeTemp: dedupeStub});
 
 		window.d2lfetch.removeTemp = simpleCacheStub;
@@ -220,7 +220,7 @@ suite('d2l-profile-image', function() {
 
 		var simpleCacheStub = sandbox.stub();
 		simpleCacheStub
-			.withArgs(sinon.match('simpleCache'))
+			.withArgs(sinon.match('simple-cache'))
 			.returns({removeTemp: dedupeStub});
 		window.d2lfetch.removeTemp = simpleCacheStub;
 
@@ -291,7 +291,7 @@ suite('d2l-profile-image', function() {
 
 		var simpleCacheStub = sandbox.stub();
 		simpleCacheStub
-			.withArgs(sinon.match('simpleCache'))
+			.withArgs(sinon.match('simple-cache'))
 			.returns({removeTemp: dedupeStub});
 		window.d2lfetch.removeTemp = simpleCacheStub;
 
