@@ -201,7 +201,7 @@ Polymer({
 		headers.append('Authorization', 'Bearer ' + this.token);
 
 		return window.d2lfetch
-			.removeTemp('simpleCache')
+			.removeTemp('simple-cache')
 			.removeTemp('dedupe')
 			.fetch(this.href, {method: 'GET', headers: headers})
 			.then(function(resp) {
