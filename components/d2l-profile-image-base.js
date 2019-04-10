@@ -77,7 +77,7 @@ export class D2LProfileImageBase extends LitElement {
 		changedProperties.forEach((oldValue, propName) => {
 			if (propName === 'colourId') {
 				this._getInitialedBackgroundColour();
-			} else if (propName === 'href') {
+			} else if (propName === 'href' && this.href) {
 				this._resetImageState();
 			} else if (propName === 'firstName' || propName === 'lastName') {
 				this._getInitials();
