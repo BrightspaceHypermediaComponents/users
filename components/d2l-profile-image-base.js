@@ -197,13 +197,22 @@ Polymer({
 		if (!this._domReady) {
 			return Promise.resolve();
 		}
-		var headers = new Headers();
-		headers.append('Authorization', 'Bearer ' + this.token);
+		const tokenPromise = (typeof (this.token) === 'function')
+			? this.token()
+			: Promise.resolve(this.token);
+		return tokenPromise
+			.then(function(tokenString) {
+				var headers = new Headers();
+				headers.append('Authorization', 'Bearer ' + tokenString);
+				return headers;
+			})
+			.then((function(hdr) {
+				return window.d2lfetch
+					.removeTemp('simple-cache')
+					.removeTemp('dedupe')
+					.fetch(this.href, {method: 'GET', headers: hdr});
 
-		return window.d2lfetch
-			.removeTemp('simple-cache')
-			.removeTemp('dedupe')
-			.fetch(this.href, {method: 'GET', headers: headers})
+			}).bind(this))
 			.then(function(resp) {
 				return resp.blob();
 			})
