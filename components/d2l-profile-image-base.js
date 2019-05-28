@@ -55,7 +55,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-profile-image-base">
 		</template>
 
 		<template is="dom-if" if="[[_showAvatar(_displayType)]]">
-			<img class="d2l-profile-image-container" draggable="false" src="[[_imageUrl]]" onerror="[[_failedToLoadImageFunc()]]">
+			<img class="d2l-profile-image-container" draggable="false" src="[[_imageUrl]]" onerror="[[_failedToLoadImageFunc()]]" alt="">
 		</template>
 
 	</template>
