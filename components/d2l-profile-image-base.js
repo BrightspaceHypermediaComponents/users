@@ -203,7 +203,9 @@ Polymer({
 		return tokenPromise
 			.then(function(tokenString) {
 				var headers = new Headers();
-				headers.append('Authorization', 'Bearer ' + tokenString);
+				if (tokenString) {
+					headers.append('Authorization', 'Bearer ' + tokenString);
+				}
 				return headers;
 			})
 			.then((function(hdr) {
