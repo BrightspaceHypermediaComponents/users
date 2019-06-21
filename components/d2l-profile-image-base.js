@@ -59,7 +59,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-profile-image-base">
 		</template>
 
 	</template>
-	
+
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
@@ -146,7 +146,7 @@ Polymer({
 	ready: function() {
 		this._domReady = true;
 		if (!this._imageUrl && this.href) {
-			this._resetImageState();
+			this._resetImageState(this.href);
 		}
 	},
 	_handleColourId: function() {
@@ -190,7 +190,10 @@ Polymer({
 		}
 		return '';
 	},
-	_resetImageState: function() {
+	_resetImageState: function(imageHref) {
+		if (!imageHref) {
+			return Promise.resolve();
+		}
 		this.set('_imageLoading', true);
 		this.set('_failedToLoadImage', false);
 
@@ -212,7 +215,7 @@ Polymer({
 				return window.d2lfetch
 					.removeTemp('simple-cache')
 					.removeTemp('dedupe')
-					.fetch(this.href, {method: 'GET', headers: hdr});
+					.fetch(imageHref, {method: 'GET', headers: hdr});
 
 			}).bind(this))
 			.then(function(resp) {
@@ -222,7 +225,7 @@ Polymer({
 				this.set('_imageUrl', URL.createObjectURL(blob));
 			}.bind(this))
 			.catch(function() {
-				this.set('_imageUrl', this.href);
+				this.set('_imageUrl', imageHref);
 			}.bind(this))
 			.then(function() {
 				this.set('_imageLoading', false);

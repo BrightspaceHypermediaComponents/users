@@ -162,7 +162,7 @@ suite('d2l-profile-image', function() {
 		defaultElement._domReady = true;
 		var removeTempSpy = sandbox.spy(window.d2lfetch, 'removeTemp');
 
-		return defaultElement._resetImageState()
+		return defaultElement._resetImageState('imageUrl')
 			.then(function() {
 				assert.isOk(removeTempSpy.calledWith('simple-cache'));
 			});
@@ -184,7 +184,7 @@ suite('d2l-profile-image', function() {
 
 		window.d2lfetch.removeTemp = simpleCacheStub;
 
-		return defaultElement._resetImageState()
+		return defaultElement._resetImageState('imageUrl')
 			.then(function() {
 				assert.isOk(dedupeStub.calledWith('dedupe'));
 			});
@@ -224,10 +224,12 @@ suite('d2l-profile-image', function() {
 			.returns({removeTemp: dedupeStub});
 		window.d2lfetch.removeTemp = simpleCacheStub;
 
-		return defaultElement._resetImageState()
+		var imageUrl = 'imageUrl';
+
+		return defaultElement._resetImageState(imageUrl)
 			.then(function() {
 				assert.equal(defaultElement._imageUrl, expectedImageUrl);
-				assert.isOk(fetchStub.calledWith(defaultElement.href, sinon.match(function(v) {
+				assert.isOk(fetchStub.calledWith(imageUrl, sinon.match(function(v) {
 					var correctMethod = v.method === 'GET';
 					var correctHeaderToken = v.headers.get('Authorization') === 'Bearer ' + expectedToken;
 
@@ -241,7 +243,7 @@ suite('d2l-profile-image', function() {
 			defaultElement._domReady = domReady;
 			var setSpy = sandbox.spy(defaultElement, 'set');
 
-			return defaultElement._resetImageState()
+			return defaultElement._resetImageState('imageUrl')
 				.then(function() {
 					assert.isOk(setSpy.calledWith('_imageLoading', true));
 
@@ -295,10 +297,9 @@ suite('d2l-profile-image', function() {
 			.returns({removeTemp: dedupeStub});
 		window.d2lfetch.removeTemp = simpleCacheStub;
 
-		defaultElement.href = expectedHref;
 		defaultElement._domReady = true;
 
-		return defaultElement._resetImageState()
+		return defaultElement._resetImageState(expectedHref)
 			.then(function() {
 				assert.equal(defaultElement._imageUrl, expectedHref);
 			});

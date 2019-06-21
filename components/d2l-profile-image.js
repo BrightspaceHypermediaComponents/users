@@ -72,7 +72,7 @@ Polymer({
 		D2L.PolymerBehaviors.Siren.EntityBehavior
 	],
 	observers: [
-		'_configureProfileImage(entity, href)',
+		'_configureProfileImage(entity)',
 	],
 	ready: function() {
 		var self = this;
@@ -96,7 +96,6 @@ Polymer({
 
 		return Promise.resolve(entity)
 			.then(function(data) {
-
 				this.set('_imageUrl', '');
 				if (data.hasSubEntityByRel(Rels.userProfile)) {
 
