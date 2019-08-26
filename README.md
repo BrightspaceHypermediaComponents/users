@@ -1,5 +1,4 @@
 # d2l-users
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/BrightspaceHypermediaComponents/users)
 [![Bower version][bower-image]][bower-url]
 [![Build status][ci-image]][ci-url]
 
@@ -48,3 +47,9 @@ npm test
 [bower-image]: https://badge.fury.io/bo/d2l-users.svg
 [ci-url]: https://travis-ci.org/BrightspaceHypermediaComponents/users
 [ci-image]: https://travis-ci.com/BrightspaceHypermediaComponents/users.svg?branch=master
+
+## Versioning, Releasing & Deploying
+
+By default, when a pull request is merged the patch version in the `package.json` will be incremented, a tag will be created, and a Github release will be created.
+
+Include `[increment major]`, `[increment minor]` or `[skip version]` in your merge commit message to change the default versioning behavior.
