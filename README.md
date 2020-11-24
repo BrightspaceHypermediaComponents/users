@@ -1,12 +1,10 @@
 # d2l-users
-[![Bower version][bower-image]][bower-url]
-[![Build status][ci-image]][ci-url]
 
 ## Installation
 
-`d2l-users` can be installed from [Bower][bower-url]:
+`d2l-users` can be installed from NPM:
 ```shell
-bower install d2l-users
+npm install BrightspaceHypermediaComponents/users
 ```
 
 ## Developing, Testing and Contributing
@@ -43,13 +41,12 @@ To lint AND run local unit tests:
 npm test
 ```
 
-[bower-url]: http://bower.io/search/?q=d2l-users
-[bower-image]: https://badge.fury.io/bo/d2l-users.svg
-[ci-url]: https://travis-ci.org/BrightspaceHypermediaComponents/users
-[ci-image]: https://travis-ci.com/BrightspaceHypermediaComponents/users.svg?branch=master
+## Versioning & Releasing
 
-## Versioning, Releasing & Deploying
+All version changes should obey [semantic versioning](https://semver.org/) rules.
 
-By default, when a pull request is merged the patch version in the `package.json` will be incremented, a tag will be created, and a Github release will be created.
+Releases use the [semantic-release](https://semantic-release.gitbook.io/) tooling and the [angular preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular) for commit message syntax. Upon release, the version in `package.json` is updated and a tag and GitHub release is created.
 
-Include `[increment major]`, `[increment minor]` or `[skip version]` in your merge commit message to change the default versioning behavior.
+Commits prefixed with `feat` will trigger a minor release, while `fix` or `perf` will trigger a patch release. A commit containing `BREAKING CHANGE` will cause a major release to occur.
+
+Other useful prefixes that will not trigger a release: `build`, `ci`, `docs`, `refactor`, `style` and `test`. More details in the [Angular Contribution Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#type).
